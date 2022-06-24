@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PagesController;
+use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\BlogsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PagesController::class, 'viewHome'])->name('home');
+Route::get('/blogs', [BlogsController::class, 'viewBlogs'])->name('blogs');
+Route::get('/get-in', [ClientsController::class, 'viewGetIn'])->name('get-in');
+

@@ -1,0 +1,46 @@
+.bg-light-green {
+  background-color: #d1f8dc;
+}
+
+input.track-input {
+  height: 40px;
+  width: 300px;
+  border: none;
+  padding: 0 10px;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+input.track-input:hover, input.track-input:focus {
+  border: none;
+  outline: none;
+}
+button.track-btn{
+  padding: 7px 10px;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.feature-item{
+  min-width: 100px;
+}
+
+footer a{
+  display: block;
+  text-decoration: none;
+  color: #fff;
+}
+
+footer a:hover{
+  color: green;
+}
+
+.footer-bg{
+  background-color: #171923;
+}
+
+.divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: #eee;
+}
