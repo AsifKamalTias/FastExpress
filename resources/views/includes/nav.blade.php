@@ -10,7 +10,10 @@
             <a class="nav-link" aria-current="page" href="{{route('home')}}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#pricing">Pricing</a>
+            <a class="nav-link" href="{{route('get-in')}}">Get in</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{route('register')}}">Register</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{route('blogs')}}">Blogs</a>

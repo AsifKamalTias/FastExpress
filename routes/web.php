@@ -19,4 +19,5 @@ use App\Http\Controllers\BlogsController;
 Route::get('/', [PagesController::class, 'viewHome'])->name('home');
 Route::get('/blogs', [BlogsController::class, 'viewBlogs'])->name('blogs');
 Route::get('/get-in', [ClientsController::class, 'viewGetIn'])->name('get-in');
+Route::get('/register', [ClientsController::class, 'viewRegister'])->name('register');
 

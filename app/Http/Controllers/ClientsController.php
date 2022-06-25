@@ -10,4 +10,8 @@ class ClientsController extends Controller
     {
         return view('client.get-in');
     }
+    function viewRegister()
+    {
+        return view('client.register');
+    }
 }
