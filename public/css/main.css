@@ -44,3 +44,33 @@ flex: 1;
 height: 1px;
 background: #eee;
 }
+
+.auth-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+form.auth-form input{
+  height: 40px;
+  width: 400px;
+  border: none;
+  padding: 0 10px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.input-err{
+  color: red;
+  font-size: 12px;
+}
+
+.code-input{
+  height: 40px;
+  width: 400px;
+  border: none;
+  padding: 0 10px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}

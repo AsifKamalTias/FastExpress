@@ -6,8 +6,8 @@
         <h1 class="display-4 fw-bold lh-1">Send loves anytime anywhere.</h1>
         <p class="lead">#1 Parcel and Courier Service in Bangladesh. Send parcels securely & quickly.</p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-          <button type="button" id="get-in-btn" class="btn btn-success btn-lg px-4 me-md-2 fw-bold">Get in</button>
-          <button type="button" id="register-btn" class="btn btn-outline-secondary btn-lg px-4">Register</button>
+          <a type="button" href="{{route('get-in')}}" id="get-in-btn" class="btn btn-success btn-lg px-4 me-md-2 fw-bold">Get in</a>
+          <a type="button" href="{{route('register')}}" id="register-btn" class="btn btn-outline-secondary btn-lg px-4">Register</a>
         </div>
       </div>
     </div>
