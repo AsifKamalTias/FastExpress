@@ -19,11 +19,14 @@ use App\Http\Controllers\BlogsController;
 Route::get('/', [PagesController::class, 'viewHome'])->name('home');
 Route::get('/blogs', [BlogsController::class, 'viewBlogs'])->name('blogs');
 Route::get('/get-in', [ClientsController::class, 'viewGetIn'])->name('get-in');
-Route::get('/register', [ClientsController::class, 'viewRegister'])->name('register')->middleware('clientLogged', 'registrationQueue');
-Route::post('/register', [ClientsController::class, 'clientRegister'])->name('client.register');
-Route::get('/register/confirm', [ClientsController::class, 'viewClientRegisterConfirm'])->name('client.register.confirm');
-//Route::post('/register/confirm', [ClientsController::class, 'clientRegisterConfirm'])->name('client.register.confirm.post');
-Route::post('/register/add', [ClientsController::class, 'clientRegisterConfirm'])->name('client.register.confirm.post');
+
+Route::get('/register', [ClientsController::class, 'viewRegister'])->name('register')->middleware('clientLogged', 'registrationQueue');//done
+Route::post('/register', [ClientsController::class, 'clientRegister'])->name('client.register');//done
+Route::get('/register/confirm', [ClientsController::class, 'viewClientRegisterConfirm'])->name('client.register.confirm')->middleware('registrationQueueDenied');//done
+Route::post('/register/confirm/apply', [ClientsController::class, 'clientRegisterConfirm'])->name('client.register.confirm.apply');//done
+Route::get('/register/confirm/apply', [ClientsController::class, 'clientRegisterConfirmApply'])->name('client.register.confirm.apply.view');//done
+Route::get('/register/confirm/cancel', [ClientsController::class, 'clientRegisterConfirmCancel'])->name('client.register.confirm.cancel')->middleware('registrationQueueDenied');//done 
+
 Route::get('/profile', [ClientsController::class, 'viewProfile'])->name('client.profile');
 Route::get('/get-out', [ClientsController::class, 'clientGetOut'])->name('client.get-out');
 

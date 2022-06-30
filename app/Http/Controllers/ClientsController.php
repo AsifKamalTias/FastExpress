@@ -8,20 +8,24 @@ use App\Models\Client;
 use App\Models\RegConfirmationCode;
 use App\Mail\ClientRegistrationConfirmation;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\DB;
 
 class ClientsController extends Controller
 {
+    
     function viewGetIn()
     {
         return view('client.get-in');
     }
+
+    
     function viewRegister()
     {
         return view('client.register');
     }
 
+    
     function clientRegister(Request $request)
     {
        $this->validate($request, [
@@ -56,7 +60,6 @@ class ClientsController extends Controller
         Mail::to($request->email)->send(new ClientRegistrationConfirmation($code));
 
         Session()->put('registrationQueue', $request->email);
-        //return view('client.register-confirm')->with('name', $request->name)->with('address', $request->address)->with('email', $request->email)->with('password', $request->password);
         return redirect()->route('client.register.confirm');
     }
 
@@ -84,18 +87,33 @@ class ClientsController extends Controller
             session()->forget('registrationQueue');
             session()->put('clientLogged', $client->email);
             return redirect()->route('client.profile');
-        }
+        } 
         else
         {
-            return "Registration failed.";
+            session()->flash('invalid-confirmation', 'Invalid confirmation code.');
+            return redirect()->route('client.register.confirm');
         }
     }
 
+    function clientRegisterConfirmApply()
+    {
+        return abort(404);
+    }
+
+    function clientRegisterConfirmCancel()
+    {
+        $res=RegConfirmationCode::where('email',session()->get('registrationQueue'))->delete();
+        session()->forget('registrationQueue');
+        return redirect()->route('register');
+    }
+
+    //delete
     function clearSessions()
     {
         return session()->flush();
     }
 
+    //delete
     function test()
     {
         return Session()->get('clientLogged');
@@ -108,13 +126,12 @@ class ClientsController extends Controller
 
     function viewClientRegisterConfirm()
     {
-        //Session()->forget('registrationQueue');
         return view('client.register-confirm');
     }
 
     function clientGetOut()
     {
         session()->forget('clientLogged');
-        return redirect()->route('client.get-in');
+        return redirect()->route('get-in');
     }
 }
