@@ -30,3 +30,15 @@ Route::get('/get-out', [ClientsController::class, 'clientGetOut'])->name('client
 Route::get('/destroy', [ClientsController::class, 'clearSessions'])->name('delete.sessions');
 Route::get('/test', [ClientsController::class, 'test'])->name('test');
 
+
+
+
+
+
+
+
+
+
+
+
+
