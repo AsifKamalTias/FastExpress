@@ -1,4 +1,4 @@
-@extends('layouts.client')
+@extends('layouts.clientLogged')
 @section('content')
     
 @endsection
