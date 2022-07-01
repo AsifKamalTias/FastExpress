@@ -10,4 +10,14 @@ class PagesController extends Controller
     {
         return view('home');
     }
+
+    function viewAbout()
+    {
+        return view('about');
+    }
+    
+    function viewTermsAndConditions()
+    {
+        return view('terms-and-conditions');
+    }
 }
