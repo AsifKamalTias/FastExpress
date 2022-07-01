@@ -20,4 +20,14 @@ class PagesController extends Controller
     {
         return view('terms-and-conditions');
     }
+
+    function viewHowItWorks()
+    {
+        return view('how-it-works');
+    }
+
+    function viewFaq()
+    {
+        return view('faq');
+    }
 }

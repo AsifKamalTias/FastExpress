@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\FeedbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +20,15 @@ use App\Http\Controllers\BlogsController;
 
 Route::get('/', [PagesController::class, 'viewHome'])->name('home');
 Route::get('/about', [PagesController::class, 'viewAbout'])->name('about');
-Route::get('/contact', [PagesController::class, 'viewContact'])->name('contact');
-Route::get('/feedback', [PagesController::class, 'viewFeedBack'])->name('feedback');
 Route::get('/how-it-works', [PagesController::class, 'viewHowItWorks'])->name('how-it-works');
 Route::get('/terms-and-conditions', [PagesController::class, 'viewTermsAndConditions'])->name('terms-and-conditions');
+Route::get('/faq', [PagesController::class, 'viewFaq'])->name('faq');
+
+Route::get('/contact', [ContactController::class, 'viewContact'])->name('contact');
+Route::post('/contact', [ContactController::class, 'postContact'])->name('contact.post');
+
+Route::get('/feedback', [FeedbackController::class, 'viewFeedback'])->name('feedback');
+Route::post('/feedback', [FeedbackController::class, 'postFeedback'])->name('feedback.post');
 
 
 
@@ -40,7 +47,7 @@ Route::post('/register/confirm/apply', [ClientsController::class, 'clientRegiste
 Route::get('/register/confirm/apply', [ClientsController::class, 'clientRegisterConfirmApply'])->name('client.register.confirm.apply.view');//done
 Route::get('/register/confirm/cancel', [ClientsController::class, 'clientRegisterConfirmCancel'])->name('client.register.confirm.cancel')->middleware('registrationQueueDenied');//done 
 
-Route::get('/profile', [ClientsController::class, 'viewProfile'])->name('client.profile');
+Route::get('/profile', [ClientsController::class, 'viewProfile'])->name('client.profile')->middleware('clientAuth');
 
 
 
