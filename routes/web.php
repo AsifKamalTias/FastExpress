@@ -65,7 +65,9 @@ Route::get('/blogs', [BlogsController::class, 'viewBlogs'])->name('blogs');
 Route::get('/deliveryman/register', [DeliveryMansController::class, 'viewRegister'])->name('deliveryman.register');
 Route::post('/deliveryman/register', [DeliveryMansController::class, 'dmRegister'])->name('deliveryman.register');
 Route::get('/deliveryman/register/confirm', [DeliveryMansController::class, 'dmRegisterConfirm'])->name('deliveryman.register.confirm');
-Route::get('/deliveryman/dashboard', [DeliveryMansController::class, 'dmLoginSuccess'])->name('deliveryman.dashboard');
+Route::get('/deliveryman/dashboard', [DeliveryMansController::class, 'dmLoginSuccess'])->name('deliveryman.dashboard')->middleware('dmLogged');
+Route::get('/deliveryman/login', [DeliveryMansController::class, 'DmLoginView'])->name('deliveryman.login');
+Route::post('/deliveryman/login', [DeliveryMansController::class, 'DmLogin'])->name('deliveryman.login');
 
 
 
