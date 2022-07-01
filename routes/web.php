@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\DeliveryMansController;
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FeedbackController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +59,13 @@ Route::get('/blogs', [BlogsController::class, 'viewBlogs'])->name('blogs');
 
 
 
+
+
+// deliveryMan
+Route::get('/deliveryman/register', [DeliveryMansController::class, 'viewRegister'])->name('deliveryman.register');
+Route::post('/deliveryman/register', [DeliveryMansController::class, 'dmRegister'])->name('deliveryman.register');
+Route::get('/deliveryman/register/confirm', [DeliveryMansController::class, 'dmRegisterConfirm'])->name('deliveryman.register.confirm');
+Route::get('/deliveryman/dashboard', [DeliveryMansController::class, 'dmLoginSuccess'])->name('deliveryman.dashboard');
 
 
 
