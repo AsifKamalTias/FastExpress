@@ -65,4 +65,43 @@ class DeliveryMansController extends Controller
     {
         return view('deliveryman.dashboard');
     }
+    function DmLoginView()
+    {
+        return view('deliveryman.login');
+    }
+    function dmLogin(Request $req)
+    {
+        $this->validate($req, [
+            'email' => 'required|email',
+            'password' => 'required'
+        ],
+        [
+            'email.required' => 'Please enter your email',
+            'email.email' => 'Please enter a valid email',
+            'password.required' => 'Please enter your password'
+        ]);
+
+        $DeliveryMan = DeliveryMan::where('dm_email', '=', $req->email)->get();
+        if(count($DeliveryMan) == 0)
+        {
+            session()->flash('invalid-auth', 'Invalid email address!');
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $DeliveryMan = $DeliveryMan[0];
+            if($req->password == $DeliveryMan->dm_password)
+            {
+                session()->put('dmLogged', $DeliveryMan->dm_email);
+                return redirect()->route('deliveryman.dashboard');
+            }
+            else
+            {
+                session()->flash('invalid-auth', 'Invalid password!');
+                return redirect()->route('deliveryman.login');
+            }
+
+           
+        }
+    }
 }
