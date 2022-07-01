@@ -10,6 +10,12 @@
             <a class="nav-link" aria-current="page" href="{{route('home')}}">Home</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{{route('blogs')}}">Blogs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{{route('client.profile')}}">Profile</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{{route('client.get-out')}}">Get out</a>
           </li>
         </ul>

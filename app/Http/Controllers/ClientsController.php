@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Client;
 use App\Models\RegConfirmationCode;
 use App\Mail\ClientRegistrationConfirmation;
+use App\Mail\ClientForgotPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class ClientsController extends Controller
 {
@@ -80,7 +82,8 @@ class ClientsController extends Controller
             $client->name = $name;
             $client->address = $address;
             $client->email = $req->email;
-            $client->password = Hash::make($req->password);
+            //$client->password = Hash::make($req->password);
+            $client->password = $password;
             $client->save();
 
             $res=RegConfirmationCode::where('email',$req->email)->delete();
@@ -107,6 +110,132 @@ class ClientsController extends Controller
         return redirect()->route('register');
     }
 
+    function clientGetIn(Request $req)
+    {
+        $this->validate($req, [
+            'email' => 'required|email',
+            'password' => 'required'
+        ],
+        [
+            'email.required' => 'Please enter your email',
+            'email.email' => 'Please enter a valid email',
+            'password.required' => 'Please enter your password'
+        ]);
+
+        $client = Client::where('email', '=', $req->email)->get();
+        if(count($client) == 0)
+        {
+            session()->flash('invalid-auth', 'Invalid email address!');
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $client = $client[0];
+            if($req->password == $client->password)
+            {
+                session()->put('clientLogged', $client->email);
+                return redirect()->route('client.profile');
+            }
+            else
+            {
+                session()->flash('invalid-auth', 'Invalid password!');
+                return redirect()->route('get-in');
+            }
+
+            // if(Hash::check($req->password, $client->password))
+            // {
+            //     session()->put('clientLogged', $client->email);
+            //     return redirect()->route('client.profile');
+            //     
+            // }
+            // else
+            // {
+            //     session()->flash('invalid-auth', 'Invalid password!');
+            //     return redirect()->route('client.get-in');
+            // }
+        }
+    }
+
+    function viewForgotPassword()
+    {
+        return view('client.forgot-password');
+    }
+
+    function clientForgotPassword(Request $req)
+    {
+        $this->validate($req, [
+            'email' => 'required|email'
+        ],
+        [
+            'email.required' => 'Please enter your email',
+            'email.email' => 'Please enter a valid email'
+        ]);
+
+        $client = Client::where('email', '=', $req->email)->get();
+        if(count($client) == 0)
+        {
+            session()->flash('invalid-email', 'Invalid email address!');
+            return redirect()->route('get-in.forgot');
+        }
+        else
+        {
+            $code = Str::random(6);
+            $client = $client[0];
+            $client->password_reset_code = $code;
+            $client->save();
+            Mail::to($req->email)->send(new ClientForgotPassword($code));
+            Session()->put('forgotPasswordQueue', $req->email);
+            return redirect()->route('get-in.forgot.client.confirm');
+        }
+    }
+
+    function viewClientForgotPasswordConfirm()
+    {
+        return view('client.forgot-password-confirm');
+    }
+
+    function clientForgotPasswordConfirmApply(Request $req)
+    {
+        $this->validate($req, [
+            'code' => 'required',
+            'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'password_confirmation' => 'required|same:password'
+        ],
+        [
+            'code.required' => 'Please enter your code',
+            'password.required' => 'Please enter your password',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.regex' => 'Password must contain at least one lowercase letter, one uppercase letter and one number',
+            'password_confirmation.required' => 'Please confirm your password',
+            'password_confirmation.same' => 'Password confirmation does not match'
+        ]);
+
+        $client = Client::where('email', '=', $req->email)->get();
+        if(count($client) == 0)
+        {
+            session()->flash('invalid-confirmation', 'Invalid email address!');
+            return redirect()->route('get-in.forgot.confirm');
+        }
+        else
+        {
+            $client = $client[0];
+            if($req->code == $client->password_reset_code)
+            {
+                $client->password = $req->password;
+                $client->password_reset_code = null;
+                $client->save();
+                session()->forget('forgotPasswordQueue');
+                session()->flash('password-changed', 'Password updated successfully!');
+                return redirect()->route('get-in');
+            }
+            else
+            {
+                session()->flash('invalid-confirmation', 'Invalid code!');
+                return redirect()->route('get-in.forgot.client.confirm');
+            }
+        }
+    }
+
     //delete
     function clearSessions()
     {
@@ -116,7 +245,14 @@ class ClientsController extends Controller
     //delete
     function test()
     {
-        return Session()->get('clientLogged');
+        if(\Cookie::get('clientLogged') == null)
+        {
+            return "Cookie is not set";
+        }
+        else
+        {
+            return "Cookie is set";
+        }
     }
 
     function viewProfile()
