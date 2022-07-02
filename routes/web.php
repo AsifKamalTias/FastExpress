@@ -73,6 +73,10 @@ Route::get('/deliveryman/dashboard', [DeliveryMansController::class, 'dmLoginSuc
 Route::get('/deliveryman/login', [DeliveryMansController::class, 'DmLoginView'])->name('deliveryman.login')->middleware('deliverymanLogged');
 Route::post('/deliveryman/login', [DeliveryMansController::class, 'DmLogin'])->name('deliveryman.login');
 Route::get('/deliveryman/logout', [DeliveryMansController::class, 'DmLogout'])->name('deliveryman.logout')->middleware('deliverymanAuth');
+Route::get('/deliveryman/changepassword', [DeliveryMansController::class, 'ViewChangePassword'])->name('deliveryman.changepassword');
+Route::post('/deliveryman/changepassword', [DeliveryMansController::class, 'ChangePassword'])->name('deliveryman.changepassword');
+Route::get('/deliveryman/password/changed', [DeliveryMansController::class, 'ViewPasswordChanged'])->name('deliveryman.password.changed');
+
 
 
 

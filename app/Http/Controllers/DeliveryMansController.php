@@ -107,4 +107,35 @@ class DeliveryMansController extends Controller
         session()->forget('dmLogged');
         return redirect()->route('deliveryman.login');
     }
+    function ViewChangePassword()
+    {
+        return view('deliveryman.changepassword');
+    }
+    function ChangePassword(Request $req)
+    {
+        $this->validate($req, [
+            'new_password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'new_password_confirmation' => 'required|same:new_password'
+        ],
+        [
+            'new_password.required' => 'Please enter your password',
+            'new_password.min' => 'Password must be at least 8 characters',
+            'new_password.regex' => 'Password must contain at least one lowercase letter, one uppercase letter and one number',
+            'new_password_confirmation.required' => 'Please confirm your password',
+            'new_password_confirmation.same' => 'Password confirmation does not match'
+        ]);
+        $deliveryman = Deliveryman::where('email', '=', session()->get('dmLogged'))->get();
+       
+        $deliveryman = $deliveryman[0];
+        $deliveryman->password = $req->new_password;
+        $deliveryman->save();
+        Session()->flash('success', 'Password updated successfully!');
+        return redirect()->route('deliveryman.password.changed');
+     
+    }
+    function ViewPasswordChanged()
+    {
+        return view("deliveryman.password-changed");
+
+    }
 }
