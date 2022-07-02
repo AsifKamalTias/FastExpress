@@ -78,8 +78,8 @@
                 <input type="submit" class="btn btn-success" value="Register">
             </form>
             <br>
-          <p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="{{ route('get-in') }}"
-            class="link-danger">Get in</a></p>
+          <p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="{{ route('deliveryman.login') }}"
+            class="link-danger">Login</a></p>
         </div>
       </div>
     </div>

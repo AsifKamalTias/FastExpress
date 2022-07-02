@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class DeliverymanLogged
+class DeliverymanAuth
 {
     /**
      * Handle an incoming request.
@@ -18,11 +18,11 @@ class DeliverymanLogged
     {
         if(session()->has('dmLogged'))
         {
-            return redirect()->route('deliveryman.dashboard');
+            return $next($request);
         }
         else
         {
-            return $next($request);
+            return redirect()->route('deliveryman.login');
         }
     }
 }

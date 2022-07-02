@@ -15,15 +15,16 @@ class CreateDeliverymansTable extends Migration
     {
         Schema::create('deliverymans', function (Blueprint $table) {
             $table->id();
-            $table->string('dm_name');
-            $table->string('dm_password');
-            $table->string('dm_email');
-            $table->string('dm_phone');
-            $table->string('dm_nid');
-            $table->date('dm_dob');
-            $table->string('dm_gender');
-            $table->double('dm_rating');
-            $table->string('dm_status');
+            $table->string('name');
+            $table->string('password');
+            $table->string('email');
+            $table->string('phone');
+            $table->string('nid');
+            $table->date('dob');
+            $table->string('gender');
+            $table->double('rating');
+            $table->string('status');
+            $table->string('verified');
 
             $table->timestamps();
         });
