@@ -257,7 +257,16 @@ class ClientsController extends Controller
 
     function viewProfile()
     {
-        return view('client.profile');
+        $client = Client::where('email', '=', session()->get('clientLogged'))->get();
+        if(count($client) == 0)
+        {
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $client = $client[0];
+            return view('client.profile', compact('client'));
+        }
     }
 
     function viewClientRegisterConfirm()
@@ -269,5 +278,128 @@ class ClientsController extends Controller
     {
         session()->forget('clientLogged');
         return redirect()->route('get-in');
+    }
+
+    function viewProfileEdit()
+    {
+        $client = Client::where('email', '=', session()->get('clientLogged'))->get();
+        if(count($client) == 0)
+        {
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $client = $client[0];
+            return view('client.profile-edit', compact('client'));
+        }
+    }
+
+    function viewProfileEditPicture()
+    {
+        $client = Client::where('email', '=', session()->get('clientLogged'))->get();
+        if(count($client) == 0)
+        {
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $client = $client[0];
+            return view('client.profile-edit-picture', compact('client'));
+        }
+    }
+
+    function viewProfileEditPictureApply(Request $req)
+    {
+        $this->validate($req, [
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ],
+        [
+            'profile_picture' => 'Please select a picture',
+            'profile_picture' => 'Please select an image',
+            'profile_picture' => 'Image must be jpeg, png, jpg, gif, or svg',
+            'profile_picture' => 'Image must be less than 2MB'
+        ]);
+        $newName = time() . '.' . $req->profile_picture->getClientOriginalExtension();
+        //$req->profile_picture->move(public_path('images/profile_pictures'), $newName);
+
+        $req->file('profile_picture')->storeAs('public/profile_pictures',$newName);
+
+
+        $client = Client::where('email', '=', session()->get('clientLogged'))->get();
+        if(count($client) == 0)
+        {
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $client = $client[0];
+            $client->profile_picture = $newName;
+            $client->save();
+            return redirect()->route('client.profile');
+        }
+        
+    }
+
+    function profileEditApply (Request $req)
+    {
+        $this->validate($req, [
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+        ]);
+        $client = Client::where('email', '=', session()->get('clientLogged'))->get();
+        if(count($client) == 0)
+        {
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $client = $client[0];
+            $client->name = $req->name;
+            $client->address = $req->address;
+            $client->save();
+            return redirect()->route('client.profile');
+        }
+    }
+
+    function viewProfileEditPassword()
+    {
+        $client = Client::where('email', '=', session()->get('clientLogged'))->get();
+        if(count($client) == 0)
+        {
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $client = $client[0];
+            return view('client.profile-edit-password', compact('client'));
+        }
+    }
+
+    function profileEditPassword(Request $req)
+    {
+        $this->validate($req, [
+            'new_password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'new_password_confirmation' => 'required|same:new_password'
+        ],
+        [
+            'new_password.required' => 'Please enter your password',
+            'new_password.min' => 'Password must be at least 8 characters',
+            'new_password.regex' => 'Password must contain at least one lowercase letter, one uppercase letter and one number',
+            'new_password_confirmation.required' => 'Please confirm your password',
+            'new_password_confirmation.same' => 'Password confirmation does not match'
+        ]);
+        $client = Client::where('email', '=', session()->get('clientLogged'))->get();
+        if(count($client) == 0)
+        {
+            return redirect()->route('get-in');
+        }
+        else
+        {
+            $client = $client[0];
+            $client->password = $req->new_password;
+            $client->save();
+            Session()->flash('success', 'Password updated successfully!');
+            return redirect()->route('client.profile');
+        }
     }
 }

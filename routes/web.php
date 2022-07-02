@@ -32,8 +32,6 @@ Route::post('/contact', [ContactController::class, 'postContact'])->name('contac
 Route::get('/feedback', [FeedbackController::class, 'viewFeedback'])->name('feedback');
 Route::post('/feedback', [FeedbackController::class, 'postFeedback'])->name('feedback.post');
 
-
-
 Route::get('/get-in', [ClientsController::class, 'viewGetIn'])->name('get-in')->middleware('clientLogged');
 Route::post('/get-in', [ClientsController::class, 'clientGetIn'])->name('client.get-in');
 Route::get('/get-in/forgot', [ClientsController::class, 'viewForgotPassword'])->name('get-in.forgot')->middleware('clientLogged');
@@ -50,6 +48,12 @@ Route::get('/register/confirm/apply', [ClientsController::class, 'clientRegister
 Route::get('/register/confirm/cancel', [ClientsController::class, 'clientRegisterConfirmCancel'])->name('client.register.confirm.cancel')->middleware('registrationQueueDenied');//done 
 
 Route::get('/profile', [ClientsController::class, 'viewProfile'])->name('client.profile')->middleware('clientAuth');
+Route::get('/profile/edit', [ClientsController::class, 'viewProfileEdit'])->name('client.profile.edit')->middleware('clientAuth');
+Route::post('/profile/edit', [ClientsController::class, 'profileEditApply'])->name('client.profile.edit.apply')->middleware('clientAuth');
+Route::get('/profile/edit/picture', [ClientsController::class, 'viewProfileEditPicture'])->name('client.profile.edit.picture')->middleware('clientAuth');
+Route::post('/profile/edit/picture', [ClientsController::class, 'viewProfileEditPictureApply'])->name('client.profile.edit.picture.apply')->middleware('clientAuth');
+Route::get('/profile/edit/password', [ClientsController::class, 'viewProfileEditPassword'])->name('client.profile.edit.password')->middleware('clientAuth');
+Route::post('/profile/edit/password', [ClientsController::class, 'profileEditPassword'])->name('client.profile.edit.password.apply')->middleware('clientAuth');
 
 
 
