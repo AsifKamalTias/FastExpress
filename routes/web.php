@@ -68,12 +68,16 @@ Route::get('/blogs', [BlogsController::class, 'viewBlogs'])->name('blogs');
 
 
 // deliveryMan
-Route::get('/deliveryman/register', [DeliveryMansController::class, 'viewRegister'])->name('deliveryman.register');
+Route::get('/deliveryman/register', [DeliveryMansController::class, 'viewRegister'])->name('deliveryman.register')->middleware('deliverymanLogged');
 Route::post('/deliveryman/register', [DeliveryMansController::class, 'dmRegister'])->name('deliveryman.register');
-Route::get('/deliveryman/register/confirm', [DeliveryMansController::class, 'dmRegisterConfirm'])->name('deliveryman.register.confirm');
-Route::get('/deliveryman/dashboard', [DeliveryMansController::class, 'dmLoginSuccess'])->name('deliveryman.dashboard')->middleware('dmLogged');
-Route::get('/deliveryman/login', [DeliveryMansController::class, 'DmLoginView'])->name('deliveryman.login');
+// Route::get('/deliveryman/register/confirm', [DeliveryMansController::class, 'dmRegisterConfirm'])->name('deliveryman.register.confirm');
+Route::get('/deliveryman/dashboard', [DeliveryMansController::class, 'dmLoginSuccess'])->name('deliveryman.dashboard')->middleware('deliverymanAuth');
+Route::get('/deliveryman/login', [DeliveryMansController::class, 'DmLoginView'])->name('deliveryman.login')->middleware('deliverymanLogged');
 Route::post('/deliveryman/login', [DeliveryMansController::class, 'DmLogin'])->name('deliveryman.login');
+Route::get('/deliveryman/logout', [DeliveryMansController::class, 'DmLogout'])->name('deliveryman.logout')->middleware('deliverymanAuth');
+Route::get('/deliveryman/changepassword', [DeliveryMansController::class, 'ViewChangePassword'])->name('deliveryman.changepassword');
+Route::post('/deliveryman/changepassword', [DeliveryMansController::class, 'ChangePassword'])->name('deliveryman.changepassword');
+Route::get('/deliveryman/password/changed', [DeliveryMansController::class, 'ViewPasswordChanged'])->name('deliveryman.password.changed');
 
 
 

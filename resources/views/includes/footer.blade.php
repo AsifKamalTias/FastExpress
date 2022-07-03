@@ -18,7 +18,7 @@
            </div>
         </div>   
         <div class="d-flex justify-content-center mt-5">
-            <a class="btn btn-success">Join as Deliveryman</a>
+            <a href="{{route('deliveryman.register')}}" class="btn btn-success">Join as Deliveryman</a>
         </div>
         <hr>
         <div class="d-flex justify-content-center text-white mt-3">

@@ -17,9 +17,9 @@ class DeliveryMansController extends Controller
         
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'phone' => 'required|min:11|numeric',
-            'email' => 'required|email',
-            'nid' => 'digits_between:10,17|required|numeric',
+            'phone' => 'required|min:11|numeric|unique:deliverymans',
+            'email' => 'required|email|unique:deliverymans',
+            'nid' => 'digits_between:10,17|required|numeric|unique:deliverymans',
             'dob' => 'nullable|date_format:Y-m-d|before:today',
             'password' => 'required|min:8|regex:/(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/',
             'retype_password' => 'required|same:password',
@@ -37,29 +37,27 @@ class DeliveryMansController extends Controller
             'retype_password.required' => 'Please retype your password',
             'retype_password.same' => 'Password does not match',
         ]);
+
+
    
         $DeliveryMan =new Deliveryman();
-        $DeliveryMan->dm_name = $request->name;
-        $DeliveryMan->dm_password = $request->password;
-        $DeliveryMan->dm_email =$request->email;
-        $DeliveryMan->dm_phone = $request->phone;
-        $DeliveryMan->dm_nid = $request->nid;
-        $DeliveryMan->dm_dob = $request->dob;
-        $DeliveryMan->dm_gender =$request->gender;
-        $DeliveryMan->dm_rating = "0";
-        $DeliveryMan->dm_status = "Inactive";
+        $DeliveryMan->name = $request->name;
+        $DeliveryMan->password = $request->password;
+        $DeliveryMan->email =$request->email;
+        $DeliveryMan->phone = $request->phone;
+        $DeliveryMan->nid = $request->nid;
+        $DeliveryMan->dob = $request->dob;
+        $DeliveryMan->gender =$request->gender;
+        $DeliveryMan->rating = "0";
+        $DeliveryMan->status = "Inactive";
+        $DeliveryMan->verified= "No";
         $DeliveryMan->save();
         
-        session()->put('dmLogged', $DeliveryMan->dm_email );
+        session()->put('dmLogged', $DeliveryMan->email );
         return redirect()->route('deliveryman.dashboard');
 
         
         
-    }
-    function dmRegisterConfirm(Request $request)
-    {
-       
-
     }
     function dmLoginSuccess()
     {
@@ -81,7 +79,7 @@ class DeliveryMansController extends Controller
             'password.required' => 'Please enter your password'
         ]);
 
-        $DeliveryMan = DeliveryMan::where('dm_email', '=', $req->email)->get();
+        $DeliveryMan = DeliveryMan::where('email', '=', $req->email)->get();
         if(count($DeliveryMan) == 0)
         {
             session()->flash('invalid-auth', 'Invalid email address!');
@@ -90,9 +88,9 @@ class DeliveryMansController extends Controller
         else
         {
             $DeliveryMan = $DeliveryMan[0];
-            if($req->password == $DeliveryMan->dm_password)
+            if($req->password == $DeliveryMan->password)
             {
-                session()->put('dmLogged', $DeliveryMan->dm_email);
+                session()->put('dmLogged', $DeliveryMan->email);
                 return redirect()->route('deliveryman.dashboard');
             }
             else
@@ -103,5 +101,41 @@ class DeliveryMansController extends Controller
 
            
         }
+    }
+    function DmLogout()
+    {
+        session()->forget('dmLogged');
+        return redirect()->route('deliveryman.login');
+    }
+    function ViewChangePassword()
+    {
+        return view('deliveryman.changepassword');
+    }
+    function ChangePassword(Request $req)
+    {
+        $this->validate($req, [
+            'new_password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'new_password_confirmation' => 'required|same:new_password'
+        ],
+        [
+            'new_password.required' => 'Please enter your password',
+            'new_password.min' => 'Password must be at least 8 characters',
+            'new_password.regex' => 'Password must contain at least one lowercase letter, one uppercase letter and one number',
+            'new_password_confirmation.required' => 'Please confirm your password',
+            'new_password_confirmation.same' => 'Password confirmation does not match'
+        ]);
+        $deliveryman = Deliveryman::where('email', '=', session()->get('dmLogged'))->get();
+       
+        $deliveryman = $deliveryman[0];
+        $deliveryman->password = $req->new_password;
+        $deliveryman->save();
+        Session()->flash('success', 'Password updated successfully!');
+        return redirect()->route('deliveryman.password.changed');
+     
+    }
+    function ViewPasswordChanged()
+    {
+        return view("deliveryman.password-changed");
+
     }
 }
