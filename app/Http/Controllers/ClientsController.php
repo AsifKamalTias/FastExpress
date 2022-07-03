@@ -245,14 +245,7 @@ class ClientsController extends Controller
     //delete
     function test()
     {
-        if(\Cookie::get('clientLogged') == null)
-        {
-            return "Cookie is not set";
-        }
-        else
-        {
-            return "Cookie is set";
-        }
+        return view('deliveries.test');
     }
 
     function viewProfile()

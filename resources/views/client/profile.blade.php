@@ -23,7 +23,7 @@
                 </div>
               </div>
               <div class="m-3">
-                <a class="btn btn-success w-100" href=""> Make a Delivery> </a>
+                <a class="btn btn-success w-100" href="{{route('delivery.start')}}"> Make a Delivery> </a>
               </div>
             </div>
             <!--section 2-->

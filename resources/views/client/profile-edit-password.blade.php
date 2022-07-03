@@ -4,7 +4,7 @@
         <h1 class="text-center">Change Password</h1>
         <div>
             <form action="" method="POST">
-                {{csrf_field()}}
+                {{csrf_field()}} 
                 <div class="form-group">
                     <label for="new_password">New Password</label>
                     <input type="password" name="new_password" class="form-control" id="new_password">

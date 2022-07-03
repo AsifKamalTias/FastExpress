@@ -7,6 +7,7 @@ use App\Http\Controllers\DeliveryMansController;
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\DeliveriesController;
 
 
 /*
@@ -55,6 +56,7 @@ Route::post('/profile/edit/picture', [ClientsController::class, 'viewProfileEdit
 Route::get('/profile/edit/password', [ClientsController::class, 'viewProfileEditPassword'])->name('client.profile.edit.password')->middleware('clientAuth');
 Route::post('/profile/edit/password', [ClientsController::class, 'profileEditPassword'])->name('client.profile.edit.password.apply')->middleware('clientAuth');
 
+Route::get('/delivery/start', [DeliveriesController::class, 'viewDeliveryStart'])->name('delivery.start')->middleware('clientAuth');
 
 
 Route::get('/destroy', [ClientsController::class, 'clearSessions'])->name('delete.sessions');
