@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Deliveryman;
+use App\Mail\DeliverymanCode;
 class DeliveryMansController extends Controller
 {
     //
@@ -137,5 +139,34 @@ class DeliveryMansController extends Controller
     {
         return view("deliveryman.password-changed");
 
+    }
+    function ViewForgotPass()
+    {
+        return view('deliveryman.forgot-password');
+    }
+    function ForgotPass(Request $req)
+    {
+        $this->validate($req, [
+            'email' => 'required|email'
+        ],
+        [
+            'email.required' => 'Please enter your email',
+            'email.email' => 'Please enter a valid email'
+        ]);
+
+        $deliveryman = Deliveryman::where('email', '=', $req->email)->get();
+        if(count($deliveryman) == 0)
+        {
+            session()->flash('dm-invalid-email', 'Invalid email address!');
+            return redirect()->route('deliveryman.forgotpass');
+        }
+        else
+        {
+            $deliveryman=$deliveryman[0];
+            $pass=$deliveryman->password;
+            Mail::to($req->email)->send(new DeliverymanCode($pass));
+            session()->flash('dm-invalid-email', 'Password send to your mail');
+            return redirect()->route('deliveryman.forgotpass');
+        }
     }
 }
