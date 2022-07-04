@@ -79,6 +79,10 @@ Route::get('/deliveryman/changepassword', [DeliveryMansController::class, 'ViewC
 Route::post('/deliveryman/changepassword', [DeliveryMansController::class, 'ChangePassword'])->name('deliveryman.changepassword');
 Route::get('/deliveryman/password/changed', [DeliveryMansController::class, 'ViewPasswordChanged'])->name('deliveryman.password.changed');
 
+Route::get('/deliveryman/forgot/password', [DeliveryMansController::class, 'ViewForgotPass'])->name('deliveryman.forgotpass');
+Route::post('/deliveryman/forgot/password', [DeliveryMansController::class, 'ForgotPass'])->name('deliveryman.forgotpass');
+
+
 
 
 

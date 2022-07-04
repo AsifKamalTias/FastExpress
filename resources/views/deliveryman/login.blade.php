@@ -29,8 +29,11 @@
                     @enderror
                     <br>
                 </div>
+                <div class="d-flex justify-content-between align-items-right">
+                  <a href="{{route('deliveryman.forgotpass')}} ">Forgot Password?</a>
+                </div>
                 
-                <input type="submit" class="btn btn-success" value="Register">
+                <input type="submit" class="btn btn-success" value="Login">
             </form>
             <br>
           <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="{{ route('deliveryman.register') }}"
