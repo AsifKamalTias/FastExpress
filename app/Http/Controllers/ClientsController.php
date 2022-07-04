@@ -258,6 +258,7 @@ class ClientsController extends Controller
         else
         {
             $client = $client[0];
+            //$profilePictuePath = storage_path('app/')
             return view('client.profile', compact('client'));
         }
     }
@@ -304,18 +305,16 @@ class ClientsController extends Controller
     function viewProfileEditPictureApply(Request $req)
     {
         $this->validate($req, [
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'profile_picture' => 'required|image'
         ],
         [
-            'profile_picture' => 'Please select a picture',
-            'profile_picture' => 'Please select an image',
-            'profile_picture' => 'Image must be jpeg, png, jpg, gif, or svg',
-            'profile_picture' => 'Image must be less than 2MB'
+            'profile_picture.required' => 'Please select a image',
+            'profile_picture.image' => 'Please select an image'
         ]);
         $newName = time() . '.' . $req->profile_picture->getClientOriginalExtension();
-        //$req->profile_picture->move(public_path('images/profile_pictures'), $newName);
+        $req->profile_picture->move(public_path('storage/profile_pictures'), $newName);
 
-        $req->file('profile_picture')->storeAs('public/profile_pictures',$newName);
+        //$req->file('profile_picture')->storeAs('public/profile_pictures',$newName);
 
 
         $client = Client::where('email', '=', session()->get('clientLogged'))->get();

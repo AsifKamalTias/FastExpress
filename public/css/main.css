@@ -74,8 +74,3 @@ form.auth-form input{
   border: 1px solid gray;
   border-radius: 5px;
 }
-
-#map{
-  height: 300px;
-  width: 400px;
-}

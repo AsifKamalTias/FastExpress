@@ -8,9 +8,9 @@
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
                     @if(!empty($client->profile_picture))
-                        <img src="{{asset('storage/profile_pictures/'.$client->profile_picture)}}" alt="client-image" class="img-fluid rounded-circle" style="width: 200px; height: 200px;">
+                      <img src="{{asset('storage/profile_pictures/'.$client->profile_picture)}}" alt="client-image" class="img-fluid rounded-circle" style="width: 200px; height: 200px;">
                     @else
-                        <img src="{{asset('storage/profile_pictures/default.jpg')}}" alt="image" class="img-fluid rounded-circle" style="width: 200px; height: 200px;">
+                      <img src="{{asset('storage/profile_pictures/default.jpg')}}" alt="image" class="img-fluid rounded-circle" style="width: 200px; height: 200px;">
                     @endif
                     <div class="mt-3">
                       <h4>{{$client->name}}</h4>
@@ -23,7 +23,7 @@
                 </div>
               </div>
               <div class="m-3">
-                <a class="btn btn-success w-100" href="{{route('delivery.start')}}"> Make a Delivery> </a>
+                <a class="btn btn-success w-100" href="{{route('delivery.from')}}"> Make a Delivery> </a>
               </div>
             </div>
             <!--section 2-->

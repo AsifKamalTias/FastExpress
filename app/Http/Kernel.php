@@ -68,6 +68,8 @@ class Kernel extends HttpKernel
         'clientLogged' => \App\Http\Middleware\ClientLogged::class,
         'registrationQueueDenied' => \App\Http\Middleware\RegistrationQueueDeny::class,
         'forgotPasswordQueue' => \App\Http\Middleware\ForgotPasswordQueue::class,
+        'deliveryTo' => \App\Http\Middleware\GoDeliveryToStore::class,
+        'deliveryConfirm' => \App\Http\Middleware\GoDeliveryConfirm::class,
         
         'deliverymanAuth' => \App\Http\Middleware\DeliverymanAuth::class,
 

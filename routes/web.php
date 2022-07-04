@@ -56,7 +56,12 @@ Route::post('/profile/edit/picture', [ClientsController::class, 'viewProfileEdit
 Route::get('/profile/edit/password', [ClientsController::class, 'viewProfileEditPassword'])->name('client.profile.edit.password')->middleware('clientAuth');
 Route::post('/profile/edit/password', [ClientsController::class, 'profileEditPassword'])->name('client.profile.edit.password.apply')->middleware('clientAuth');
 
-Route::get('/delivery/start', [DeliveriesController::class, 'viewDeliveryStart'])->name('delivery.start')->middleware('clientAuth');
+Route::get('/delivery/from', [DeliveriesController::class, 'viewDeliveryFrom'])->name('delivery.from')->middleware('clientAuth');
+Route::post('/delivery/from', [DeliveriesController::class, 'deliveryFromStore'])->name('delivery.from.store')->middleware('clientAuth');
+Route::get('/delivery/to', [DeliveriesController::class, 'viewDeliveryTo'])->name('delivery.to')->middleware('clientAuth', 'deliveryTo');
+Route::post('/delivery/to', [DeliveriesController::class, 'deliveryToStore'])->name('delivery.to.store')->middleware('clientAuth', 'deliveryTo');
+Route::get('/delivery/confirm', [DeliveriesController::class, 'viewDeliveryConfirm'])->name('delivery.confirm')->middleware('clientAuth', 'deliveryTo', 'deliveryConfirm');
+Route::post('/delivery/confirm', [DeliveriesController::class, 'deliveryConfirmApply'])->name('delivery.confirm.apply')->middleware('clientAuth', 'deliveryTo', 'deliveryConfirm');
 
 
 Route::get('/destroy', [ClientsController::class, 'clearSessions'])->name('delete.sessions');
