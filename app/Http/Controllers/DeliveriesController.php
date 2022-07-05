@@ -79,7 +79,7 @@ class DeliveriesController extends Controller
         $lat2 = (float)(session()->get('deliveryToLat'));
         $lon2 = (float)(session()->get('deliveryToLon'));
         $distance = $this->getDistanceFromLatLonInKm($lat1, $lon1, $lat2, $lon2);
-        $cost = $distance*$costKG;
+        $cost = round($distance*$costKG);
         return view('deliveries.confirm')
             ->with('cost', $cost)
             ->with('deliveryFromLat', $lat1)
@@ -92,11 +92,11 @@ class DeliveriesController extends Controller
     {
         $this->validate($req, [
             'delivery_product_name' => 'required',
-            'delivery_contact' => 'required'
+            'delivery_contact' => 'required',
         ],
         [
             'delivery_product_name.required' => 'Product name is required.',
-            'delivery_contact.required' => 'Reciever phone is required.'
+            'delivery_contact.required' => 'Reciever phone number is required.'
 
         ]
         );
@@ -116,7 +116,22 @@ class DeliveriesController extends Controller
         $delivery->delivery_status = 'Pending';
         $delivery->save();
 
-        return "Success";
+        session()->flash('success', 'New delivery order Added!');
+        session()->forget('deliveryFromLat');
+        session()->forget('deliveryFromLon');
+        session()->forget('deliveryToLat');
+        session()->forget('deliveryToLon');
+        return redirect()->route('client.profile');
 
+    }
+
+    function showOrderedDeliveries()
+    {
+        $client = Client::where('email', '=', session()->get('clientLogged'))->get();
+        $client = $client[0];
+        $client_id = $client->id;
+
+        $deliveries = Delivery::where('client_id', '=', $client_id)->get();
+        return view('deliveries.show', compact('deliveries'));
     }
 }

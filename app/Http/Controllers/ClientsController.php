@@ -67,7 +67,7 @@ class ClientsController extends Controller
 
     function clientRegisterConfirm(Request $req)
     {
-        $regConfirmationCode = RegConfirmationCode::select('code')->where('email', '=', $req->email)->get();
+        $regConfirmationCode = RegConfirmationCode::select('code')->where('email', '=', $req->email)->orderBy('created_at', 'desc')->get();
         $regConfirmationCode = $regConfirmationCode[0]->code;
         if($req->code == $regConfirmationCode)
         {

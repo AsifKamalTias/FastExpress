@@ -8,6 +8,7 @@ use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\DeliveriesController;
+use App\Http\Controllers\NewsLetterController;
 
 
 /*
@@ -26,6 +27,9 @@ Route::get('/about', [PagesController::class, 'viewAbout'])->name('about');
 Route::get('/how-it-works', [PagesController::class, 'viewHowItWorks'])->name('how-it-works');
 Route::get('/terms-and-conditions', [PagesController::class, 'viewTermsAndConditions'])->name('terms-and-conditions');
 Route::get('/faq', [PagesController::class, 'viewFaq'])->name('faq');
+
+Route::get('/subscribe', [NewsLetterController::class, 'viewNotFound']);
+Route::post('/subscribe', [NewsLetterController::class, 'addEmail'])->name('subscribe');
 
 Route::get('/contact', [ContactController::class, 'viewContact'])->name('contact');
 Route::post('/contact', [ContactController::class, 'postContact'])->name('contact.post');
@@ -62,6 +66,7 @@ Route::get('/delivery/to', [DeliveriesController::class, 'viewDeliveryTo'])->nam
 Route::post('/delivery/to', [DeliveriesController::class, 'deliveryToStore'])->name('delivery.to.store')->middleware('clientAuth', 'deliveryTo');
 Route::get('/delivery/confirm', [DeliveriesController::class, 'viewDeliveryConfirm'])->name('delivery.confirm')->middleware('clientAuth', 'deliveryTo', 'deliveryConfirm');
 Route::post('/delivery/confirm', [DeliveriesController::class, 'deliveryConfirmApply'])->name('delivery.confirm.apply')->middleware('clientAuth', 'deliveryTo', 'deliveryConfirm');
+Route::get('/profile/deliveries', [DeliveriesController::class, 'showOrderedDeliveries'])->name('profile.deliveries')->middleware('clientAuth');
 
 
 Route::get('/destroy', [ClientsController::class, 'clearSessions'])->name('delete.sessions');

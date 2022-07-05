@@ -15,19 +15,6 @@
     </div>
   </div>
 
-  <div class="container-fluid bg-light p-4">
-   <div class="container">
-    <h3>Track Delivery</h3>
-   </div>
-   <div class="d-flex justify-content-center pb-5">
-    <form action="" method="POST">
-      {{ csrf_field() }}
-      <input type="text" class="track-input" placeholder="Delivery ID...">
-      <button type="submit" class="track-btn bg-success text-white border-0"><i class="bi bi-arrow-right"></i></button>
-     </form>
-   </div>
-  </div>
-
   <section id="feature" class="container mt-4 mb-4">
     <div class="d-flex justify-content-center align-items-center mt-5">
       <div class="feature-item d-flex flex-column justify-content center shadow p-3 mb-5 bg-white rounded mx-2">
@@ -44,37 +31,18 @@
       </div>
     </div>
   </section>
-
-  <section id="pricing">
-    <div class="container-fluid bg-light-green p-4">
-      <div class="container">
-        <h3>Pricing</h3>
-      </div>
-      <div class="d-flex justify-content-center flex-wrap">
-        <div class="card mx-5 my-2" style="width: 18rem;">
-          <div class="card-body text-center">
-            <h1 class="card-title d-inline">৳3</h1>
-            <p class="card-text d-inline">/Per KILOMETER</p>
-          </div>
-        </div>
-        <div class="card mx-5 my-2" style="width: 18rem;">
-          <div class="card-body text-center">
-            <h1 class="card-title d-inline">৳5</h1>
-            <p class="card-text d-inline">/Per KILOGRAM</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
   <div class="container-fluid bg-light p-4">
     <div class="container">
      <h3>Newsletter</h3>
     </div>
     <div class="d-flex justify-content-center pb-5">
-     <form action="" method="POST">
+     <form action="{{route('subscribe')}}" method="POST">
        {{ csrf_field() }}
-       <input type="text" class="track-input" placeholder="Email Address">
+       <input type="text" class="track-input" name="sub_email" placeholder="Email Address">
        <button type="submit" class="track-btn bg-success text-white border-0"><i class="bi bi-arrow-right"></i></button>
+       @error('sub_email')
+        <p class="text-danger">{{$message}}</p>
+        @enderror
       </form>
     </div>
    </div>
