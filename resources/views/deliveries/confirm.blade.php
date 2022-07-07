@@ -18,7 +18,7 @@
         <input type="text" name="delivery_to_lon" readonly placeholder="Longitude" value="{{$deliveryToLon}}">
         <br><br>
         <label for="">Cost</label><br>
-        <input type="text" name="delivery_price" readonly value={{$cost}}><br><br>
+        <input type="text" name="delivery_price" readonly value={{$cost}}> ৳<br><br>
         <label for="">Reciever Phone Number</label><br>
         <input type="text" name="delivery_contact"><br>
         @error('delivery_contact')

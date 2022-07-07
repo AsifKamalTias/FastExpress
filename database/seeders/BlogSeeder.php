@@ -17,8 +17,8 @@ class BlogSeeder extends Seeder
         for($i=0; $i<9; $i++)
         {
             Blog::create([
-                'blog_title' => 'My title',
-                'blog_content' => 'my description'
+                'blog_title' => 'New Blogs',
+                'blog_content' => 'new description'
             ]);
         }
     }

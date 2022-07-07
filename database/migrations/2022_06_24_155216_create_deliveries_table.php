@@ -16,13 +16,12 @@ class CreateDeliveriesTable extends Migration
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
             $table->string('delivery_product_name');
-            $table->string('delivery_product_weight');
             $table->double('delivery_price');
             $table->string('delivery_destination_address');
             $table->string('delivery_source_address');
             $table->string('delivery_contact');
             $table->integer('client_id');
-            $table->integer('deliveryman_id');
+            $table->integer('deliveryman_id')->nullable();
             $table->string('delivery_status');
             $table->timestamps();
         });

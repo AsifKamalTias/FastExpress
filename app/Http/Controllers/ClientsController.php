@@ -243,10 +243,10 @@ class ClientsController extends Controller
     }
 
     //delete
-    function test()
-    {
-        return view('deliveries.test');
-    }
+    // function test()
+    // {
+    //     return view('deliveries.test');
+    // }
 
     function viewProfile()
     {

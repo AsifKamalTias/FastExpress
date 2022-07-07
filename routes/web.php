@@ -70,8 +70,10 @@ Route::get('/profile/deliveries', [DeliveriesController::class, 'showOrderedDeli
 
 
 Route::get('/destroy', [ClientsController::class, 'clearSessions'])->name('delete.sessions');
-Route::get('/test', [ClientsController::class, 'test'])->name('test');
+//Route::get('/test', [ClientsController::class, 'test'])->name('test');
+
 Route::get('/blogs', [BlogsController::class, 'viewBlogs'])->name('blogs');
+Route::get('/blog/{id}', [BlogsController::class, 'viewBlog'])->name('blog');
 
 
 
