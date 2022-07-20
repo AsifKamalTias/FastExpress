@@ -112,7 +112,7 @@ class DeliveriesController extends Controller
         $delivery->delivery_destination_address = $req->delivery_to_lat.', '.$req->delivery_to_lon;
         $delivery->delivery_contact = $req->delivery_contact;
         $delivery->client_id = $client_id;
-        $delivery->deliveryman_id = null;
+        $delivery->deliveryman_id = 0;
         $delivery->delivery_status = 'Pending';
         $delivery->save();
 
