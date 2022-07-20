@@ -23,7 +23,7 @@
                 </div>
               </div>
               <div class="m-3">
-                <a class="btn btn-success w-100" href="{{route('delivery.from')}}"> Make a Delivery> </a>
+                
               </div>
             </div>
             <!--section 2-->
@@ -35,6 +35,7 @@
                     <br>
                 @endif
                 <h1>Ordered Deliveries</h1>
+                <a class="btn btn-success m-5" href="{{route('delivery.from')}}"> Make a Delivery> </a>
                 <a href="{{route('profile.deliveries')}}" class="btn btn-success">View Ordered Deliveries</a>
             </div>
           </div>
