@@ -16,7 +16,7 @@
                       <h4>{{$client->name}}</h4>
                       <p class="text-secondary mb-1">{{$client->address}}</p>
                       <p class="text-muted font-size-sm">Member since {{$client->created_at}}</p>
-                      <a class="btn btn-success" href={{route('client.profile.edit')}}>Edit</a>
+                      <a class="btn btn-success" href="{{route('client.profile.edit')}}">Edit</a>
                       <a class="btn btn-outline-success" href="{{route('client.get-out')}}">Get out</a>
                     </div>
                   </div>

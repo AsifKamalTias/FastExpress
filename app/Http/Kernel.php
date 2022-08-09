@@ -74,6 +74,10 @@ class Kernel extends HttpKernel
         'deliverymanAuth' => \App\Http\Middleware\DeliverymanAuth::class,
 
         'deliverymanLogged' => \App\Http\Middleware\DeliverymanLogged::class,
+
+
+        //Api
+        'clientLoggedResponse' => \App\Http\Middleware\ClientLoggedResponse::class,
         
     ];
 }

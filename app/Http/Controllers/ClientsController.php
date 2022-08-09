@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use App\Models\ClientToken;
+use Datetime;
 
 class ClientsController extends Controller
 {
@@ -394,4 +397,152 @@ class ClientsController extends Controller
             return redirect()->route('client.profile');
         }
     }
+
+    //API FUNCTIONS
+
+    function clientRegisterResponse(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'email' => 'required|email|unique:clients',
+            'password' => 'required|min:8|regex:/(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/',
+            'retypePassword' => 'required|same:password'
+        ],
+        [
+            'name.required' => 'Please enter your name',
+            'name.string' => 'Name must be a string',
+            'name.max' => 'Name must be at most 255 characters',
+            'address.required' => 'Please enter your address',
+            'address.string' => 'Address must be a string',
+            'address.max' => 'Address must be at most 255 characters',
+            'email.required' => 'Please enter your email',
+            'email.email' => 'Email must be a valid email',
+            'email.unique' => 'Email already exists',
+            'password.required' => 'Please enter your password',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.regex' => 'Password must contain at least one lowercase letter, one uppercase letter and one number',
+            'retypePassword.required' => 'Please confirm your password',
+            'retypePassword.same' => 'Password confirmation does not match'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+        else
+        {        
+            $code = Str::random(6);
+
+            $regConfirmationCode = new RegConfirmationCode();
+            $regConfirmationCode->name = $request->name;
+            $regConfirmationCode->address = $request->address;
+            $regConfirmationCode->password = $request->password;
+            $regConfirmationCode->email = $request->email;
+            $regConfirmationCode->code = $code;
+            $regConfirmationCode->save();
+
+            Mail::to($request->email)->send(new ClientRegistrationConfirmation($code));
+
+            return response()->json(['message' => 'success'], 200);
+        }
+        
+    }
+
+    function clientRegisterConfirmResponse(Request $req)
+    {
+        $regConfirmationCode = RegConfirmationCode::select('code')->where('email', '=', $req->email)->orderBy('created_at', 'desc')->get();
+        $regConfirmationCode = $regConfirmationCode[0]->code;
+        if($req->code == $regConfirmationCode)
+        {
+            $name = RegConfirmationCode::select('name')->where('email', '=', $req->email)->get();
+            $name = $name[0]->name;
+            $address = RegConfirmationCode::select('address')->where('email', '=', $req->email)->get();
+            $address = $address[0]->address;
+            $password = RegConfirmationCode::select('password')->where('email', '=', $req->email)->get();
+            $password = $password[0]->password;
+
+            $client = new Client();
+            $client->name = $name;
+            $client->address = $address;
+            $client->email = $req->email;
+            //$client->password = Hash::make($req->password);
+            $client->password = $password;
+            $client->save();
+
+            $res=RegConfirmationCode::where('email',$req->email)->delete();
+            return response()->json(['message' => 'success'], 200);
+        } 
+        else
+        {
+            // session()->flash('invalid-confirmation', 'Invalid confirmation code.');
+            return response()->json(['message' => 'failed'], 422);
+        }
+    }
+
+    function removeRegistrationConfirmationCode(Request $req)
+    {
+        $res=RegConfirmationCode::where('email',$req->email)->delete();
+        return response()->json(['message' => 'success'], 200);
+    }
+
+    function getInResponse(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required'
+        ],
+        [
+            'email.required' => 'Please enter your email',
+            'email.email' => 'Email must be a valid email',
+            'password.required' => 'Please enter your password'
+            
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+        else
+        {
+            $client = Client::where('email', '=', $request->email)->get();
+            if(count($client) == 0)
+            {
+                return response()->json(['message' => 'failed'], 422);
+            }
+            else
+            {
+                $client = $client[0];
+                if($request->password == $client->password)
+                {
+                    $key = Str::random(32);
+
+                    $clientToken = new ClientToken();
+                    $clientToken->client_id = $client->id;
+                    $clientToken->token = $key;
+                    $clientToken->created_at = new DateTime();
+                    $clientToken->save();
+                    return response()->json(['message' => 'success', 'token' => $key], 200);
+                }
+                else
+                {
+                    return response()->json(['message' => 'Invalid username or password!'], 422);
+                }
+            }
+        }
+    }
+
+    function profileResponse(Request $request){
+        $token = $request->header('Authorization');
+        $clientToken = ClientToken::where('token', '=', $token)->get();
+        if(count($clientToken) == 0)
+        {
+            return response()->json(['message' => 'failed'], 422);
+        }
+        else
+        {
+            $client = Client::select('name', 'address', 'email')->where('id', '=', $clientToken[0]->client_id)->get();
+            return response()->json(['message' => 'success', 'client' => $client[0]], 200);
+        }
+    }
+
+    
 }

@@ -2,11 +2,6 @@
 @section('content')
 <div class="container m-5">
     <h1>Blogs</h1>
-    <!-- <div>
-        @foreach($blogs as $blog)
-            {{$blog->blog_title}}
-        @endforeach
-    </div> -->
     @foreach($blogs as $blog)
     <div class="card m-5">
         <div class="card-body">
