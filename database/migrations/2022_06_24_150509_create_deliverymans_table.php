@@ -21,6 +21,8 @@ class CreateDeliverymansTable extends Migration
             $table->string('phone');
             $table->string('nid');
             $table->date('dob');
+            $table->double('orderCompleted');
+            $table->double('earnings');
             $table->string('gender');
             $table->double('rating');
             $table->string('status');

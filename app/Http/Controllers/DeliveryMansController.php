@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Deliveryman;
+use App\Models\Delivery;
 use App\Mail\DeliverymanCode;
 class DeliveryMansController extends Controller
 {
@@ -50,7 +51,10 @@ class DeliveryMansController extends Controller
         $DeliveryMan->nid = $request->nid;
         $DeliveryMan->dob = $request->dob;
         $DeliveryMan->gender =$request->gender;
-        $DeliveryMan->rating = "0";
+        
+        $DeliveryMan->earnings = 0;
+        $DeliveryMan->orderCompleted = 0;
+        $DeliveryMan->rating = 0.0;
         $DeliveryMan->status = "Inactive";
         $DeliveryMan->verified= "No";
         $DeliveryMan->save();
@@ -167,6 +171,103 @@ class DeliveryMansController extends Controller
             Mail::to($req->email)->send(new DeliverymanCode($pass));
             session()->flash('dm-invalid-email', 'Password send to your mail');
             return redirect()->route('deliveryman.forgotpass');
+            
         }
+
+    }
+    function GetDeliverymanID()
+    {
+        $deliveryman = Deliveryman::where('email', '=', session()->get('dmLogged'))->get();
+        $deliveryman=$deliveryman[0];
+        return $deliveryman->id;
+
+    }
+    function GetDeliveries()
+    {
+        $deliveries = Delivery::where('deliveryman_id', '=', '0')->get();
+       
+        return view('deliveryman.get-deliveries', compact('deliveries'));
+    }
+    function AcceptDeliveries($id)
+    {
+        $id= decrypt($id);
+        $deliveries = Delivery::where('id', '=', $id)->get();
+        $deliveries =$deliveries[0];
+        $deliveries->deliveryman_id=$this->GetDeliverymanID();
+        $deliveries->save();
+        session()->flash('dmMessage', 'Success!');
+        return redirect()->route('deliveryman.gtDeliveries');
+            
+
+    }
+    function MyDeliveries()
+    {
+        $deliveries = Delivery::where('deliveryman_id', '=', $this->GetDeliverymanID())
+                                ->where('delivery_status', '=', 'Pending')
+                                ->get();
+        
+        return view('deliveryman.my-deliveries', compact('deliveries'));
+    }
+    function CompleteDeliveries($id)
+    {
+        $id= decrypt($id);
+        $deliveries = Delivery::where('id', '=', $id)->get();
+        $deliveries =$deliveries[0];
+        $deliveries->delivery_status="Complete";
+        $deliveries->save();
+        session()->flash('dmMessage', 'Success!');
+        // $deliveryman = Deliveryman::where('email', '=', session()->get('dmLogged'))->get();
+        // $deliveryman = $deliveryman[0];
+        // $DeliveryMan->earnings = 1000;
+        // $DeliveryMan->orderCompleted = 10;
+        // $deliveryman()->save();
+
+        return redirect()->route('deliveryman.myDeliveries');
+
+    }
+    function DeliveriesCompleted()
+    {
+        $deliveries = Delivery::where('deliveryman_id', '=', $this->GetDeliverymanID())
+                                ->where('delivery_status', '=', 'Complete')
+                                ->get();
+        if(count($deliveries) == 0)
+        {
+            return "<h2>No Completed Deliveries to show</h2>";
+
+        }
+        return view('deliveryman.my-completed-deliveries', compact('deliveries'));
+
+    }
+    function EditProfile()
+    {
+        $deliveryman = Deliveryman::where('email', '=', session()->get('dmLogged'))->get();
+        $deliveryman=$deliveryman[0];
+        return view('deliveryman.edit-profile', compact('deliveryman'));
+    }
+    function EditProfileConfirm(Request $req)
+    {
+        $this->validate($req, [
+            'name' => 'required|string|max:255',
+            'phone' => 'required|min:11|numeric',
+            'nid' => 'digits_between:10,17|required|numeric',
+            'dob' => 'nullable|date_format:Y-m-d|before:today',
+
+        ]);
+        $deliveryman = Deliveryman::where('email', '=', session()->get('dmLogged'))->get();
+        if(count($deliveryman) == 0)
+        {
+            return redirect()->route('deliveryman.login');
+        }
+        else
+        {
+            $deliveryman = $deliveryman[0];
+            $deliveryman->name = $req->name;
+            $deliveryman->nid = $req->nid;
+             $deliveryman->dob = $req->dob;
+            $deliveryman->phone = $req->phone;
+            $deliveryman->save();
+            return redirect()->route('deliveryman.dashboard');
+        }
+
     }
 }

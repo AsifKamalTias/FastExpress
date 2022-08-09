@@ -94,6 +94,18 @@ Route::get('/deliveryman/password/changed', [DeliveryMansController::class, 'Vie
 Route::get('/deliveryman/forgot/password', [DeliveryMansController::class, 'ViewForgotPass'])->name('deliveryman.forgotpass');
 Route::post('/deliveryman/forgot/password', [DeliveryMansController::class, 'ForgotPass'])->name('deliveryman.forgotpass');
 
+Route::get('/deliveryman/get/deliveries', [DeliveryMansController::class, 'GetDeliveries'])->name('deliveryman.gtDeliveries')->middleware('deliverymanAuth');
+Route::get('/deliveryman/get/deliveries/accept/{id}', [DeliveryMansController::class, 'AcceptDeliveries'])->name('deliveryman.gtDeliveries.accept')->middleware('deliverymanAuth');
+
+Route::get('/deliveryman/mydeliveries', [DeliveryMansController::class, 'MyDeliveries'])->name('deliveryman.myDeliveries')->middleware('deliverymanAuth');
+Route::get('/deliveryman/mydeliveries/complete/{id}', [DeliveryMansController::class, 'CompleteDeliveries'])->name('deliveryman.completeDeleveries')->middleware('deliverymanAuth');
+
+Route::get('/deliveryman/deliveries/completed', [DeliveryMansController::class, 'DeliveriesCompleted'])->name('deliveryman.deliveriesCompleted')->middleware('deliverymanAuth');
+
+Route::get('/deliveryman/profile/edit', [DeliveryMansController::class, 'EditProfile'])->name('deliveryman.editProfile')->middleware('deliverymanAuth');
+Route::post('/deliveryman/profile/edit', [DeliveryMansController::class, 'EditProfileConfirm'])->name('deliveryman.editProfile')->middleware('deliverymanAuth');
+
+
 
 
 
