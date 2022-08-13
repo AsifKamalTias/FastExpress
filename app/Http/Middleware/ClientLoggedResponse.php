@@ -17,16 +17,16 @@ class ClientLoggedResponse
      */
     public function handle(Request $request, Closure $next)
     {
-        $tk = $request->header("Authorization");
-        if($tk !=null){
-            $token = Token::where('token',$tk)
-                     ->whereNull('expires_at')
-                     ->first();
-            if($token){
-                return $next($request);
+        $key=$request->header("Authorization");
+        if ($key)
+        {
+            $token=ClientToken::where('token',$key)->whereNUll('expires_at')->first();
+            if($token)
+            {
+                return $next($request);             
             }
-            return response()->json(["msg"=>"Supplied Token is invalid or expired"], 401);
+            return response()->json(["msg"=>"Invalid token"], 401);
         }
-        return response()->json(["msg"=>"Not token supplied"], 401);
+        return response()->json(["msg"=>"Credentials not found!"], 401);
     }
 }

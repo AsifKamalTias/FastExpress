@@ -544,5 +544,16 @@ class ClientsController extends Controller
         }
     }
 
+    function getClientId($token){
+        $result = ClientToken::where('token', '=', $token)->first();
+        $client_id = $result->client_id;
+        return $client_id;
+    }
+
+    function test(Request $request){
+        $client_id = $this->getClientId($request->header("Authorization"));
+        return response ()->json(['message' => 'success', 'client' => $client_id], 200);       
+    }
+
     
 }
