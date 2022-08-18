@@ -539,8 +539,8 @@ class ClientsController extends Controller
         }
         else
         {
-            $client = Client::select('name', 'address', 'email')->where('id', '=', $clientToken[0]->client_id)->get();
-            return response()->json(['message' => 'success', 'client' => $client[0]], 200);
+            $client = Client::where('id', '=', $clientToken[0]->client_id)->get();
+            return response()->json(['client' => $client[0]], 200);
         }
     }
 
@@ -548,6 +548,24 @@ class ClientsController extends Controller
         $result = ClientToken::where('token', '=', $token)->first();
         $client_id = $result->client_id;
         return $client_id;
+    }
+
+    function getOutResponse(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $clientToken = ClientToken::where('token', '=', $token)->get();
+        if(count($clientToken) == 0)
+        {
+            return response()->json(['message' => 'failed'], 422);
+        }
+        else
+        {
+            $clientToken = $clientToken[0];
+            $clientToken->expires_at = new DateTime();
+            $clientToken->save();
+
+            return response()->json(['message' => 'success'], 200);
+        }
     }
 
     function test(Request $request){
