@@ -568,6 +568,172 @@ class ClientsController extends Controller
         }
     }
 
+    function editInfoResponse(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'address' => 'required|max:255'
+        ],
+        [
+            'name.required' => 'Please enter your name',
+            'name.max' => 'Name must be at most 255 characters',
+            'address.required' => 'Please enter your address',
+            'address.max' => 'Address must be at most 255 characters'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+        else
+        {
+            $token = $request->header('Authorization');
+            $clientToken = ClientToken::where('token', '=', $token)->get();
+            if(count($clientToken) == 0)
+            {
+                return response()->json(['message' => 'failed'], 422);
+            }
+            else
+            {
+                $client = Client::where('id', '=', $clientToken[0]->client_id)->get();
+                $client = $client[0];
+                $client->name = $request->name;
+                $client->address = $request->address;
+                $client->save();
+                return response()->json(['message' => 'success'], 200);
+            }
+        }
+    }
+
+    function updateProfilePictureResponse(Request $req)
+    {
+        if($req->hasfile('file')){
+            $newName = time() . '.' . $req->file->getClientOriginalExtension();
+            $req->file->move(public_path('storage/profile_pictures'), $newName);
+
+            $token = $req->header('Authorization');
+            $client_id = $this->getClientId($token);
+            $client = Client::where('id', '=', $client_id)->get();
+            $client = $client[0];
+            //remove previous profile picture
+            $oldName = $client->profile_picture;
+            if($oldName != 'default.png')
+            {
+                unlink(public_path('storage/profile_pictures/' . $oldName));
+            }
+            $client->profile_picture = $newName;
+            $client->save();
+            return response()->json(['message' => 'success'], 200);
+        }
+
+        return response()->json(["msg"=>"No image selected!"], 422);
+    }
+
+    function updatePasswordResponse(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'confirmPassword' => 'required|same:password'
+        ],
+        [
+            'password.required' => 'Please enter your password',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.regex' => 'Password must contain at least one lowercase letter, one uppercase letter and one number',
+            'confirmPassword.required' => 'Please confirm your password',
+            'confirmPassword.same' => 'Password confirmation does not match'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+        else
+        {
+            $token = $request->header('Authorization');
+            $client_id = $this->getClientId($token);
+            $client = Client::where('id', '=', $client_id)->get();
+            $client = $client[0];
+            $client->password = $request->password;
+            $client->save();
+            return response()->json(['message' => 'success'], 200);
+        }
+    }
+
+    function forgotPasswordEmailResponse(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email'
+        ],
+        [
+            'email.required' => 'Please enter your email',
+            'email.email' => 'Please enter a valid email'
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+        else
+        {
+            $client = Client::where('email', '=', $request->email)->get();
+            if(count($client) == 0)
+            {
+                return response()->json(['message' => 'failed'], 422);
+            }
+            else
+            {
+                $code = Str::random(6);
+                $client = $client[0];
+                $client->password_reset_code = $code;
+                $client->save();
+                Mail::to($request->email)->send(new ClientForgotPassword($code));
+                return response()->json(['message' => 'success'], 200);
+            }
+        }
+    }
+
+    function forgotPasswordCodeResponse(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'code' => 'required',
+            'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'confirmPassword' => 'required|same:password'
+        ],
+        [
+            'email.required' => 'Please enter your email',
+            'email.email' => 'Please enter a valid email',
+            'code.required' => 'Please enter your code',
+            'password.required' => 'Please enter your password',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.regex' => 'Password must contain at least one lowercase letter, one uppercase letter and one number',
+            'confirmPassword.required' => 'Please confirm your password',
+            'confirmPassword.same' => 'Password confirmation does not match'
+
+        ]);
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+        else
+        {
+            $client = Client::where('email', '=', $request->email)->get();
+            if(count($client) == 0)
+            {
+                return response()->json(['message' => 'Failed'], 422);
+            }
+            else
+            {
+                if($client[0]->password_reset_code == $request->code)
+                {
+                    $client = $client[0];
+                    $client->password = $request->password;
+                    $client->password_reset_code = null;
+                    $client->save();
+                    return response()->json(['message' => 'success'], 200);
+                }
+                else
+                {
+                    return response()->json(['message' => 'Invalid Code!'], 422);
+                }
+            }
+        }
+    }
+
     function test(Request $request){
         $client_id = $this->getClientId($request->header("Authorization"));
         return response ()->json(['message' => 'success', 'client' => $client_id], 200);       
