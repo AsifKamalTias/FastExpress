@@ -605,7 +605,7 @@ class ClientsController extends Controller
     }
 
     function updateProfilePictureResponse(Request $req)
-    {
+    {        
         if($req->hasfile('file')){
             $newName = time() . '.' . $req->file->getClientOriginalExtension();
             $req->file->move(public_path('storage/profile_pictures'), $newName);

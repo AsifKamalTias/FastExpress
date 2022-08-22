@@ -14,11 +14,11 @@ class BlogSeeder extends Seeder
      */
     public function run()
     {
-        for($i=0; $i<9; $i++)
+        for($i=0; $i<25; $i++)
         {
             Blog::create([
-                'blog_title' => 'New Blogs',
-                'blog_content' => 'new description'
+                'blog_title' => 'Our Blog Title '.$i,
+                'blog_content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consectetur nisi, euismod nisi nisi euismod nisi. Nam euismod, nisi eu consectetur consectetur, nisi nisi consect'
             ]);
         }
     }

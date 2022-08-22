@@ -33,11 +33,12 @@ class NewsLetterController extends Controller
     function addEmailResponse(Request $req)
     {
         $validator = Validator::make($req->all(), [
-            'email' => 'required|email'
+            'email' => 'required|email|unique:newslettersubscribers'
         ],
         [
-            'email.required' => 'Email is required.',
-            'email.email' => 'Enter a valid email'
+            'email.required' => 'Email is required!',
+            'email.email' => 'Enter a valid email!',
+            'email.unique' => 'You have already subscribed!'
         ]        
     );
         if ($validator->fails()) {
