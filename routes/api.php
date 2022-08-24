@@ -35,6 +35,7 @@ Route::post('/feedback', [FeedbackController::class, 'postFeedBackResponse']);
 Route::post('/client/register', [ClientsController::class, 'clientRegisterResponse']);
 Route::post('/client/register/confirm', [ClientsController::class, 'clientRegisterConfirmResponse']);
 Route::post('/client/register/confirm/cancel', [ClientsController::class, 'removeRegistrationConfirmationCode']);
+
 Route::post('/client/getin', [ClientsController::class, 'getInResponse']);
 Route::post('/client/profile', [ClientsController::class, 'profileResponse'])->middleware('clientLoggedResponse');
 Route::post('/client/get-out', [ClientsController::class, 'getOutResponse'])->middleware('clientLoggedResponse');
@@ -43,7 +44,11 @@ Route::post('/client/edit-info/picture', [ClientsController::class, 'updateProfi
 Route::post('/client/edit-info/password', [ClientsController::class, 'updatePasswordResponse'])->middleware('clientLoggedResponse');
 Route::post('/client/forgot-password/email', [ClientsController::class, 'forgotPasswordEmailResponse']);
 Route::post('/client/forgot-password/code', [ClientsController::class, 'forgotPasswordCodeResponse']);
+
 Route::post('/client/delivery/make-delivery', [DeliveriesController::class, 'makeDeliveryResponse'])->middleware('clientLoggedResponse');
+Route::post('/client/deliveries', [DeliveriesController::class, 'clientDeliveryResponse'])->middleware('clientLoggedResponse');
+Route::post('/client/delivery/{id}', [DeliveriesController::class, 'singleDeliveryResponse'])->middleware('clientLoggedResponse');
 Route::get('/costPerKm', [DeliveriesController::class, 'costPerKmResponse']);
+Route::get('/delivery-details/download/{id}', [DeliveriesController::class, 'DownloadDeliveryDetails']);
 
 Route::post('/test', [ClientsController::class, 'test'])->middleware('clientLoggedResponse');

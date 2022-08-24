@@ -7,6 +7,7 @@ use App\Models\Price;
 use App\Models\Delivery;
 use App\Models\Client;
 use App\Models\ClientToken;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DeliveriesController extends Controller
 {
@@ -171,5 +172,49 @@ class DeliveriesController extends Controller
             $delivery->save();
             return response()->json(['message' => 'success'], 200);
         }
+    }
+
+    function clientDeliveryResponse(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $clientToken = ClientToken::where('token', '=', $token)->get();
+        if(count($clientToken) == 0)
+        {
+            return response()->json(['message' => 'failed'], 422);
+        }
+        else
+        {
+            $client = Client::where('id', '=', $clientToken[0]->client_id)->get();
+            $client = $client[0];
+            $client_id = $client->id;
+            $deliveries = Delivery::where('client_id', '=', $client_id)->get();
+            return response()->json(['deliveries' => $deliveries], 200);
+        }
+    }
+
+    function singleDeliveryResponse(Request $request, $id)
+    {
+        $token = $request->header('Authorization');
+        $clientToken = ClientToken::where('token', '=', $token)->get();
+        if(count($clientToken) == 0)
+        {
+            return response()->json(['message' => 'failed'], 422);
+        }
+        else
+        {
+            $delivery = Delivery::where('id', '=', $id)->get();
+            return response()->json(['delivery' => $delivery], 200);
+        }
+    }
+
+    function DownloadDeliveryDetails($id)
+    {
+        $delivery = Delivery::where('id', '=', $id)->get();
+        $delivery = $delivery[0];
+        $client = Client::where('id', '=', $delivery->client_id)->get();
+        $client = $client[0];
+        $pdf = PDF::loadView('pdf.downloadDeliveryDetails', compact('delivery', 'client' ));
+        $fileName = 'DeliveryDetails_'.$delivery->id.'.pdf';
+        return $pdf->download($fileName);
     }
 }
