@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Price;
 use App\Models\Delivery;
 use App\Models\Client;
+use App\Models\ClientToken;
 
 class DeliveriesController extends Controller
 {
@@ -133,5 +134,42 @@ class DeliveriesController extends Controller
 
         $deliveries = Delivery::where('client_id', '=', $client_id)->get();
         return view('deliveries.show', compact('deliveries'));
+    }
+
+    //API
+
+    function costPerKmResponse()
+    {
+        $price = Price::where('price_indicator', '=', 'Price Per Kilogram')->get();
+        $price = $price[0];
+        return response()->json(['price' => $price->price_value], 200);
+    }
+
+    function makeDeliveryResponse(Request $request)
+    {
+        $token = $request->header('Authorization');
+        $clientToken = ClientToken::where('token', '=', $token)->get();
+        if(count($clientToken) == 0)
+        {
+            return response()->json(['message' => 'failed'], 422);
+        }
+        else
+        {
+            $client = Client::where('id', '=', $clientToken[0]->client_id)->get();
+            $client = $client[0];
+            $client_id = $client->id;
+
+            $delivery = new Delivery();
+            $delivery->delivery_product_name = $request->productName;
+            $delivery->delivery_price = $request->totalCost;
+            $delivery->delivery_source_address = $request->sourceAddress;
+            $delivery->delivery_destination_address = $request->destinationAddress;
+            $delivery->delivery_contact = $request->receiverPhone;
+            $delivery->client_id = $client_id;
+            $delivery->deliveryman_id = null;
+            $delivery->delivery_status = 'Pending';
+            $delivery->save();
+            return response()->json(['message' => 'success'], 200);
+        }
     }
 }

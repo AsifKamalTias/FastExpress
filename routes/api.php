@@ -8,6 +8,7 @@ use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\NewsLetterController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\DeliveriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::post('/client/edit-info/picture', [ClientsController::class, 'updateProfi
 Route::post('/client/edit-info/password', [ClientsController::class, 'updatePasswordResponse'])->middleware('clientLoggedResponse');
 Route::post('/client/forgot-password/email', [ClientsController::class, 'forgotPasswordEmailResponse']);
 Route::post('/client/forgot-password/code', [ClientsController::class, 'forgotPasswordCodeResponse']);
-
+Route::post('/client/delivery/make-delivery', [DeliveriesController::class, 'makeDeliveryResponse'])->middleware('clientLoggedResponse');
+Route::get('/costPerKm', [DeliveriesController::class, 'costPerKmResponse']);
 
 Route::post('/test', [ClientsController::class, 'test'])->middleware('clientLoggedResponse');
